@@ -47,4 +47,7 @@ Route::prefix('backoffice')->middleware(['auth', 'verified'])->group(function ()
     Route::get('/clients', [\App\Http\Controllers\Backoffice\ClientController::class, 'index'])->name('backoffice.clients.index');
     Route::get('/clients/create', [\App\Http\Controllers\Backoffice\ClientController::class, 'create'])->name('backoffice.clients.create');
     Route::post('/clients', [\App\Http\Controllers\Backoffice\ClientController::class, 'store'])->name('backoffice.clients.store');
+    Route::get('/clients/{client}', [\App\Http\Controllers\Backoffice\ClientController::class, 'show'])->name('backoffice.clients.show');
+    Route::post('/clients/{client}/eligibilites', [\App\Http\Controllers\Backoffice\ClientController::class, 'storeEligibilite'])->name('backoffice.clients.eligibilites.store');
+    Route::post('/clients/{client}/installation/complete', [\App\Http\Controllers\Backoffice\ClientController::class, 'completeInstallation'])->name('backoffice.clients.installation.complete');
 });

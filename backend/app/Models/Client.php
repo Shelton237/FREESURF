@@ -29,5 +29,14 @@ class Client extends Model
     {
         return $this->belongsTo(Partner::class);
     }
-}
 
+    public function eligibilites()
+    {
+        return $this->hasMany(Eligibilite::class);
+    }
+
+    public function installation()
+    {
+        return $this->hasOne(Installation::class);
+    }
+}
