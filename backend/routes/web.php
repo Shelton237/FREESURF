@@ -6,11 +6,46 @@ use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 
 Route::get('/', function () {
-    return Inertia::render('Welcome', [
+    $stats = [
+        'clients' => \App\Models\Client::count(),
+        'bts' => \App\Models\Bts::count(),
+        'demandes' => \App\Models\Demande::count(),
+    ];
+    // Séries simples sur 14 jours pour la vitrine
+    $from = now()->subDays(13)->startOfDay();
+    $clientsSeries = \App\Models\Client::where('created_at', '>=', $from)
+        ->selectRaw('date(created_at) as d, count(*) as c')
+        ->groupBy('d')->orderBy('d')->pluck('c', 'd');
+    $demandesSeries = \App\Models\Demande::where('created_at', '>=', $from)
+        ->selectRaw('date(created_at) as d, count(*) as c')
+        ->groupBy('d')->orderBy('d')->pluck('c', 'd');
+    $days = collect(range(0, 13))->map(fn($i) => $from->copy()->addDays($i)->toDateString());
+    $series = [
+        'clients' => $days->map(fn($d) => (int) ($clientsSeries[$d] ?? 0))->values(),
+        'demandes' => $days->map(fn($d) => (int) ($demandesSeries[$d] ?? 0))->values(),
+        'labels' => $days,
+    ];
+    return Inertia::render('Home', [
         'canLogin' => Route::has('login'),
         'canRegister' => Route::has('register'),
-        'laravelVersion' => Application::VERSION,
-        'phpVersion' => PHP_VERSION,
+        'stats' => $stats,
+        'appName' => config('app.name', 'FREESURF'),
+        'series' => $series,
+        // Slides / témoignages / actus de démonstration — à brancher sur DB plus tard
+        'slides' => [
+            ['image' => '/logo.png', 'title' => 'Portail client', 'text' => 'Demande d\'abonnement en quelques clics.'],
+            ['image' => '/logo_black.png', 'title' => 'Backoffice', 'text' => 'Gérez BTS, clients, factures et paiements.'],
+            ['image' => '/logo.png', 'title' => 'PWA mobile', 'text' => 'Installable, offline pour le terrain.'],
+        ],
+        'testimonials' => [
+            ['name' => 'A. Kamdem', 'role' => 'Technicien', 'text' => 'Les visites d\'éligibilité sont plus rapides avec le portail.'],
+            ['name' => 'M. Tchoumi', 'role' => 'Partenaire', 'text' => 'En quelques minutes, je soumets une demande client.'],
+            ['name' => 'S. Nguem', 'role' => 'Comptable', 'text' => 'La facturation mensuelle automatisée nous fait gagner du temps.'],
+        ],
+        'news' => [
+            ['title' => 'Lancement CuWiP', 'date' => now()->toDateString(), 'text' => 'Première version disponible pour pilote.'],
+            ['title' => 'Module facturation', 'date' => now()->addDays(7)->toDateString(), 'text' => 'Arrive bientôt avec PDF et relances.'],
+        ],
     ]);
 });
 
