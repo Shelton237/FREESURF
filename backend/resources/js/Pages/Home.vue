@@ -1,4 +1,4 @@
-﻿<script setup>
+<script setup>
 import PublicLayout from '../Layouts/PublicLayout.vue'
 import StatCard from '../Components/Public/StatCard.vue'
 import FeatureCard from '../Components/Public/FeatureCard.vue'
@@ -15,7 +15,7 @@ const props = defineProps({ appName: String, canLogin: Boolean, canRegister: Boo
     <section class="max-w-7xl mx-auto grid lg:grid-cols-2 gap-8 items-center p-6 md:p-12">
       <div>
         <h1 class="text-4xl md:text-5xl font-extrabold leading-tight">
-          CuWiP â€” la plateforme FAI/WISP de <span class="text-brand">FREESURF</span>
+          CuWiP — la plateforme FAI/WISP de <span class="text-brand">FREESURF</span>
         </h1>
         <p class="mt-4 text-gray-600">
           GÃ©rez vos BTS, clients, Ã©ligibilitÃ©s, installations et facturation mensuelle avec notifications WhatsApp/SMS.
@@ -51,11 +51,11 @@ const props = defineProps({ appName: String, canLogin: Boolean, canRegister: Boo
         <h2 class="text-2xl font-bold mb-4">FonctionnalitÃ©s clÃ©s</h2>
         <div class="grid md:grid-cols-3 gap-4">
           <FeatureCard title="Gestion BTS" text="CrÃ©ez vos stations (ville, code, GPS, composants, photos) et suivez la couverture." />
-          <FeatureCard title="Cycle client" text="Prospection â†’ Ã‰ligibilitÃ© â†’ Installation â†’ Actif, avec historique et justificatifs." />
+          <FeatureCard title="Cycle client" text="Prospection → Éligibilité → Installation → Actif, avec historique et justificatifs." />
           <FeatureCard title="Facturation auto" text="GÃ©nÃ©rez chaque mois les factures, exportez les PDFs, et marquez les paiements." />
           <FeatureCard title="Notifications" text="PrÃ©venez vos clients via WhatsApp/SMS lors dâ€™Ã©missions et confirmations de paiement." />
           <FeatureCard title="Dashboard" text="Statistiques et filtres dynamiques: clients par BTS, impayÃ©s, exclusions, etc." />
-          <FeatureCard title="PWA mobile" text="Application installable et utilisable hors-ligne pour les Ã©quipes terrain." />
+          <FeatureCard title="PWA mobile" text="Application installable et utilisable hors-ligne pour les Ãéquipes terrain." />
         </div>
       </div>
     </section>
@@ -65,7 +65,7 @@ const props = defineProps({ appName: String, canLogin: Boolean, canRegister: Boo
       <h2 class="text-2xl font-bold mb-4">Comment Ã§a marche ?</h2>
       <ol class="space-y-2 text-gray-700 list-decimal list-inside">
         <li>Portail client: soumission de la demande (abonnement/rÃ©abonnement).</li>
-        <li>Backoffice: Ã©tude dâ€™Ã©ligibilitÃ© (couverture par BTS ou relai).</li>
+        <li>Backoffice: Ãétude d’€™Ã©ligibilitÃ© (couverture par BTS ou relai).</li>
         <li>Installation: prise de rendezâ€‘vous et marquage terminÃ©.</li>
         <li>Facturation: gÃ©nÃ©ration mensuelle, exclusions, envoi de PDF.</li>
         <li>Paiement: validation et notifications au client.</li>

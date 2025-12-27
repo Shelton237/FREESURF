@@ -1,4 +1,4 @@
-﻿<script setup>
+<script setup>
 import { ref } from 'vue'
 import { router } from '@inertiajs/vue3'
 const props = defineProps({ workOrder: Object })
@@ -56,12 +56,12 @@ async function onFiles(ev){
         <button class="mt-3 px-3 py-2 bg-brand-black text-white rounded" @click="start">DÃ©marrer</button>
       </div>
       <div class="border rounded p-4">
-        <h2 class="font-semibold mb-2">Terminer</h2>
+        <h2 class="font-semibold mb-2">terminér</h2>
         <div class="grid grid-cols-2 gap-3">
           <div><label class="block text-sm">Date</label><input type="date" v-model="completeForm.date" class="w-full border rounded p-2" /></div>
           <div><label class="block text-sm">Commentaire</label><input v-model="completeForm.commentaire" class="w-full border rounded p-2" /></div>
         </div>
-        <button class="mt-3 px-3 py-2 bg-brand text-white rounded" @click="complete">Marquer terminÃ©</button>
+        <button class="mt-3 px-3 py-2 bg-brand text-white rounded" @click="complete">Marquer terminé©</button>
       </div>
     </div>
 

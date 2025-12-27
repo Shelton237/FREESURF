@@ -1,4 +1,4 @@
-﻿# FREESURF / CuWiP
+# FREESURF / CuWiP
 
 Squelette Laravel 12 + Inertia (Vue 3) + PWA + Horizon, avec routes `portal` (portail client) et `backoffice`.
 
@@ -54,7 +54,7 @@ git push -u origin main
   - docker/entrypoint.sh: init Laravel (migrate, caches)
 - Variables:
   - ackend/.env (app) — injectez via le secret ENV_PROD dans la CI
-  - .env à la racine (optionnel): DOMAIN, ACME_EMAIL pour Traefik
+  - .env  à la racine (optionnel): DOMAIN, ACME_EMAIL pour Traefik
 - Démarrer:
   - docker compose up -d --build`n  - DNS: créer un enregistrement A DOMAIN → IP serveur; Traefik émettra le certificat Let’s Encrypt automatiquement.
 
