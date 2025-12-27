@@ -1,0 +1,118 @@
+name: CI/CD
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+  workflow_dispatch:
+
+jobs:
+  build:
+    name: Build & Test (Laravel + Vite)
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.2'
+          coverage: none
+          extensions: mbstring, dom, fileinfo, sqlite3, gd
+
+      - name: Composer install
+        working-directory: backend
+        run: |
+          composer install --no-interaction --prefer-dist --no-progress
+
+      - name: Prepare .env and DB (sqlite)
+        working-directory: backend
+        run: |
+          cp .env.example .env
+          sed -i 's/DB_CONNECTION=.*/DB_CONNECTION=sqlite/' .env
+          php artisan key:generate
+          mkdir -p database
+          touch database/database.sqlite
+          php artisan migrate --no-interaction --force
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+          cache-dependency-path: backend/package-lock.json
+
+      - name: NPM ci
+        working-directory: backend
+        run: npm ci
+
+      - name: Build assets (CI)
+        working-directory: backend
+        env:
+          SKIP_PWA: '1'
+        run: npm run build:ci
+
+      - name: Archive build artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: backend-build
+          path: |
+            backend/**
+            !backend/node_modules/**
+            !backend/storage/**
+            !backend/vendor/**
+
+  deploy:
+    name: Deploy to Server
+    needs: build
+    runs-on: ubuntu-latest
+    if: ${{ github.ref == 'refs/heads/main' && secrets.SSH_HOST }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Download artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: backend-build
+          path: release
+
+      - name: Upload files to server
+        uses: appleboy/scp-action@v0.1.7
+        with:
+          host: ${{ secrets.SSH_HOST }}
+          username: ${{ secrets.SSH_USER }}
+          password: ${{ secrets.SSH_PASSWORD }}
+          port: ${{ secrets.SSH_PORT || '22' }}
+          source: "release/backend/*"
+          target: ${{ secrets.DEPLOY_PATH || '/var/www/freesurf' }}
+
+      - name: Remote deploy steps
+        uses: appleboy/ssh-action@v1.0.3
+        with:
+          host: ${{ secrets.SSH_HOST }}
+          username: ${{ secrets.SSH_USER }}
+          password: ${{ secrets.SSH_PASSWORD }}
+          port: ${{ secrets.SSH_PORT || '22' }}
+          script: |
+            set -e
+            cd ${{ secrets.DEPLOY_PATH || '/var/www/freesurf' }}/backend
+            if [ -n "${{ secrets.ENV_PROD }}" ]; then
+              echo "Writing .env from secret"
+              echo "${{ secrets.ENV_PROD }}" > .env
+            fi
+            php -v || true
+            composer --version || true
+            if command -v composer >/dev/null 2>&1; then
+              composer install --no-interaction --prefer-dist --no-progress --no-dev
+            fi
+            php artisan key:generate --force || true
+            php artisan migrate --force || true
+            php artisan config:cache || true
+            php artisan route:cache || true
+            php artisan view:cache || true
+            php artisan horizon:terminate || true
+            (php artisan horizon &) || true
