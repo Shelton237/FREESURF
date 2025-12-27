@@ -96,4 +96,5 @@ Route::prefix('tech')->middleware(['auth','verified','role:technicien'])->group(
     Route::get('/work-orders/{workOrder}', [\App\Http\Controllers\Tech\WorkOrderController::class, 'show'])->name('tech.work-orders.show');
     Route::post('/work-orders/{workOrder}/start', [\App\Http\Controllers\Tech\WorkOrderController::class, 'start'])->name('tech.work-orders.start');
     Route::post('/work-orders/{workOrder}/complete', [\App\Http\Controllers\Tech\WorkOrderController::class, 'complete'])->name('tech.work-orders.complete');
+    Route::post('/work-orders/{workOrder}/attachments', [\App\Http\Controllers\Tech\WorkOrderController::class, 'uploadAttachment'])->name('tech.work-orders.attachments.upload');
 });

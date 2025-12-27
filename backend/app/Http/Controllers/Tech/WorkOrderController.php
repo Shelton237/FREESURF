@@ -24,7 +24,7 @@ class WorkOrderController extends Controller
     public function show(Request $request, WorkOrder $workOrder): Response
     {
         abort_unless($workOrder->assigned_to === $request->user()->id, 403);
-        $workOrder->load('client','bts','events');
+        $workOrder->load('client','bts','events','attachments');
         return Inertia::render('Tech/WorkOrders/Show', [ 'workOrder' => $workOrder ]);
     }
 
@@ -67,5 +67,19 @@ class WorkOrderController extends Controller
 
         return back()->with('success', 'Intervention terminée');
     }
-}
 
+    public function uploadAttachment(Request $request, WorkOrder $workOrder): RedirectResponse
+    {
+        abort_unless($workOrder->assigned_to === $request->user()->id, 403);
+        $data = $request->validate([
+            'file' => ['required','file','mimes:jpg,jpeg,png,webp','max:8192'],
+        ]);
+        $path = $request->file('file')->store('work_orders/'.$workOrder->id, 'public');
+        $workOrder->attachments()->create([
+            'path' => $path,
+            'mime' => $request->file('file')->getMimeType(),
+            'meta' => ['size' => $request->file('file')->getSize()],
+        ]);
+        return back()->with('success','Fichier envoyé');
+    }
+}
