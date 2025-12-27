@@ -1,0 +1,40 @@
+version: '3.9'
+
+services:
+  web:
+    labels:
+      - traefik.enable=true
+      - traefik.http.routers.freesurf.rule=Host(`${DOMAIN}`)
+      - traefik.http.routers.freesurf.entrypoints=websecure
+      - traefik.http.routers.freesurf.tls.certresolver=letsencrypt
+      - traefik.http.services.freesurf.loadbalancer.server.port=80
+      # HTTP -> HTTPS redirect
+      - traefik.http.routers.freesurf-http.rule=Host(`${DOMAIN}`)
+      - traefik.http.routers.freesurf-http.entrypoints=web
+      - traefik.http.routers.freesurf-http.middlewares=redirect-to-https
+      - traefik.http.middlewares.redirect-to-https.redirectscheme.scheme=https
+
+  traefik:
+    image: traefik:v3.1
+    container_name: traefik
+    command:
+      - --providers.docker=true
+      - --providers.docker.exposedbydefault=false
+      - --entrypoints.web.address=:80
+      - --entrypoints.websecure.address=:443
+      - --certificatesresolvers.letsencrypt.acme.tlschallenge=true
+      - --certificatesresolvers.letsencrypt.acme.email=${ACME_EMAIL}
+      - --certificatesresolvers.letsencrypt.acme.storage=/letsencrypt/acme.json
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+      - traefik-lets:/letsencrypt
+    restart: unless-stopped
+    networks:
+      - default
+
+volumes:
+  traefik-lets:
+

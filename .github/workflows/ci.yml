@@ -99,11 +99,17 @@ jobs:
           port: ${{ secrets.SSH_PORT || '22' }}
           script: |
             set -e
-            cd ${{ secrets.DEPLOY_PATH || '/var/www/freesurf' }}/backend
-            if [ -n "${{ secrets.ENV_PROD }}" ]; then
-              echo "Writing .env from secret"
-              echo "${{ secrets.ENV_PROD }}" > .env
-            fi
             cd ${{ secrets.DEPLOY_PATH || '/var/www/freesurf' }}
+            # Write backend env if provided
+            if [ -n "${{ secrets.ENV_PROD }}" ]; then
+              echo "Writing backend/.env from secret"
+              mkdir -p backend
+              echo "${{ secrets.ENV_PROD }}" > backend/.env
+            fi
+            # Compose-level env for Traefik/domain
+            if [ -n "${{ secrets.DOMAIN }}" ] && [ -n "${{ secrets.ACME_EMAIL }}" ]; then
+              echo "DOMAIN=${{ secrets.DOMAIN }}" > .env
+              echo "ACME_EMAIL=${{ secrets.ACME_EMAIL }}" >> .env
+            fi
             docker compose pull || true
             docker compose up -d --build
