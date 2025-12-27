@@ -31,6 +31,8 @@ Route::prefix('portal')->group(function () {
     Route::get('/', function () {
         return Inertia::render('Portal/Home');
     })->name('portal.home');
+    Route::get('/demandes/nouvelle', [\App\Http\Controllers\Portal\DemandeController::class, 'create'])->name('portal.demandes.create');
+    Route::post('/demandes', [\App\Http\Controllers\Portal\DemandeController::class, 'store'])->name('portal.demandes.store');
 });
 
 // Backoffice (Administration)
@@ -38,4 +40,11 @@ Route::prefix('backoffice')->middleware(['auth', 'verified'])->group(function ()
     Route::get('/', function () {
         return Inertia::render('Backoffice/Dashboard');
     })->name('backoffice.dashboard');
+    Route::get('/bts', [\App\Http\Controllers\Backoffice\BtsController::class, 'index'])->name('backoffice.bts.index');
+    Route::get('/bts/create', [\App\Http\Controllers\Backoffice\BtsController::class, 'create'])->name('backoffice.bts.create');
+    Route::post('/bts', [\App\Http\Controllers\Backoffice\BtsController::class, 'store'])->name('backoffice.bts.store');
+
+    Route::get('/clients', [\App\Http\Controllers\Backoffice\ClientController::class, 'index'])->name('backoffice.clients.index');
+    Route::get('/clients/create', [\App\Http\Controllers\Backoffice\ClientController::class, 'create'])->name('backoffice.clients.create');
+    Route::post('/clients', [\App\Http\Controllers\Backoffice\ClientController::class, 'store'])->name('backoffice.clients.store');
 });
