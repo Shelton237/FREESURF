@@ -1,4 +1,4 @@
-<script setup>
+﻿<script setup>
 import { ref } from 'vue'
 import { router } from '@inertiajs/vue3'
 
@@ -28,9 +28,10 @@ const submit = () => {
           <input v-model="form.lng" class="w-full border rounded p-2" />
         </div>
       </div>
-      <button :disabled="submitting" @click="submit" class="px-4 py-2 bg-red-600 text-white rounded">Enregistrer</button>
+      <button :disabled="submitting" @click="submit" class="px-4 py-2 bg-brand text-white rounded">Enregistrer</button>
     </div>
   </div>
   
 </template>
+
 

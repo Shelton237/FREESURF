@@ -1,4 +1,4 @@
-<script setup>
+﻿<script setup>
 import { ref } from 'vue'
 import { router } from '@inertiajs/vue3'
 defineProps({ bts: Array, partners: Array })
@@ -20,7 +20,7 @@ const submit = () => {
         <input v-model="form.nom" class="w-full border rounded p-2" />
       </div>
       <div>
-        <label class="block text-sm">Téléphone</label>
+        <label class="block text-sm">TÃ©lÃ©phone</label>
         <input v-model="form.telephone" class="w-full border rounded p-2" />
       </div>
       <div>
@@ -38,14 +38,14 @@ const submit = () => {
         <div>
           <label class="block text-sm">BTS</label>
           <select v-model="form.bts_id" class="w-full border rounded p-2">
-            <option value="">–</option>
+            <option value="">â€“</option>
             <option v-for="b in bts" :key="b.id" :value="b.id">{{ b.code }} ({{ b.ville }})</option>
           </select>
         </div>
         <div>
           <label class="block text-sm">Partenaire</label>
           <select v-model="form.partner_id" class="w-full border rounded p-2">
-            <option value="">–</option>
+            <option value="">â€“</option>
             <option v-for="p in partners" :key="p.id" :value="p.id">{{ p.nom }}</option>
           </select>
         </div>
@@ -60,8 +60,9 @@ const submit = () => {
           <input v-model="form.lng" class="w-full border rounded p-2" />
         </div>
       </div>
-      <button :disabled="submitting" @click="submit" class="px-4 py-2 bg-red-600 text-white rounded">Enregistrer</button>
+      <button :disabled="submitting" @click="submit" class="px-4 py-2 bg-brand text-white rounded">Enregistrer</button>
     </div>
   </div>
 </template>
+
 

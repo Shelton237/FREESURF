@@ -1,10 +1,16 @@
-import { defineConfig } from 'vite';
+﻿import { defineConfig } from 'vite';
 import laravel from 'laravel-vite-plugin';
 import vue from '@vitejs/plugin-vue';
 import { VitePWA } from 'vite-plugin-pwa';
 const disablePWA = process.env.SKIP_PWA === '1';
 
 export default defineConfig({
+    server: {
+        host: '127.0.0.1',
+        port: 5173,
+        strictPort: false,
+        hmr: { host: '127.0.0.1' },
+    },
     plugins: [
         laravel({
             input: 'resources/js/app.js',
@@ -28,7 +34,7 @@ export default defineConfig({
                 start_url: '/portal',
                 display: 'standalone',
                 background_color: '#ffffff',
-                theme_color: '#dc2626',
+                theme_color: '#e60000',
                 icons: [
                     { src: 'logo.png', sizes: '192x192', type: 'image/png' },
                     { src: 'logo.png', sizes: '512x512', type: 'image/png' },
@@ -57,3 +63,4 @@ export default defineConfig({
         }),
     ],
 });
+

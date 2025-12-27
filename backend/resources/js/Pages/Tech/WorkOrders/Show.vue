@@ -1,4 +1,4 @@
-<script setup>
+﻿<script setup>
 import { ref } from 'vue'
 import { router } from '@inertiajs/vue3'
 const props = defineProps({ workOrder: Object })
@@ -42,18 +42,18 @@ async function onFiles(ev){
 
 <template>
   <div class="p-6 max-w-3xl">
-    <a href="/tech" class="text-sm text-blue-600">← Retour</a>
-    <h1 class="text-2xl font-semibold mt-2">Intervention #{{ workOrder.id }} — {{ workOrder.type.toUpperCase() }}</h1>
-    <p class="text-gray-600">Client: {{ workOrder.client?.nom ?? '-' }} — Statut: <b>{{ workOrder.status }}</b></p>
+    <a href="/tech" class="text-sm text-blue-600">â† Retour</a>
+    <h1 class="text-2xl font-semibold mt-2">Intervention #{{ workOrder.id }} â€” {{ workOrder.type.toUpperCase() }}</h1>
+    <p class="text-gray-600">Client: {{ workOrder.client?.nom ?? '-' }} â€” Statut: <b>{{ workOrder.status }}</b></p>
 
     <div class="grid md:grid-cols-2 gap-6 mt-4">
       <div class="border rounded p-4">
-        <h2 class="font-semibold mb-2">Démarrer</h2>
+        <h2 class="font-semibold mb-2">DÃ©marrer</h2>
         <div class="grid grid-cols-2 gap-3">
           <div><label class="block text-sm">Lat</label><input v-model="startForm.lat" class="w-full border rounded p-2" /></div>
           <div><label class="block text-sm">Lng</label><input v-model="startForm.lng" class="w-full border rounded p-2" /></div>
         </div>
-        <button class="mt-3 px-3 py-2 bg-gray-800 text-white rounded" @click="start">Démarrer</button>
+        <button class="mt-3 px-3 py-2 bg-brand-black text-white rounded" @click="start">DÃ©marrer</button>
       </div>
       <div class="border rounded p-4">
         <h2 class="font-semibold mb-2">Terminer</h2>
@@ -61,7 +61,7 @@ async function onFiles(ev){
           <div><label class="block text-sm">Date</label><input type="date" v-model="completeForm.date" class="w-full border rounded p-2" /></div>
           <div><label class="block text-sm">Commentaire</label><input v-model="completeForm.commentaire" class="w-full border rounded p-2" /></div>
         </div>
-        <button class="mt-3 px-3 py-2 bg-red-600 text-white rounded" @click="complete">Marquer terminé</button>
+        <button class="mt-3 px-3 py-2 bg-brand text-white rounded" @click="complete">Marquer terminÃ©</button>
       </div>
     </div>
 
@@ -75,3 +75,4 @@ async function onFiles(ev){
     </div>
   </div>
 </template>
+

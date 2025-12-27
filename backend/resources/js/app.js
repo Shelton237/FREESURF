@@ -27,5 +27,7 @@ createInertiaApp({
     },
 });
 
-// Register the PWA service worker
-registerSW({ immediate: true });
+// Register the PWA service worker only in production to avoid dev conflicts
+if (import.meta.env.MODE === 'production') {
+    registerSW({ immediate: true });
+}
