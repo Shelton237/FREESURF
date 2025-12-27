@@ -58,9 +58,9 @@ jobs:
       - name: Archive build artifact
         uses: actions/upload-artifact@v4
         with:
-          name: backend-build
+          name: release-bundle
           path: |
-            backend/**
+            **/*
             !backend/node_modules/**
             !backend/storage/**
             !backend/vendor/**
@@ -77,7 +77,7 @@ jobs:
       - name: Download artifact
         uses: actions/download-artifact@v4
         with:
-          name: backend-build
+          name: release-bundle
           path: release
 
       - name: Upload files to server
@@ -87,7 +87,7 @@ jobs:
           username: ${{ secrets.SSH_USER }}
           password: ${{ secrets.SSH_PASSWORD }}
           port: ${{ secrets.SSH_PORT || '22' }}
-          source: "release/backend/*"
+          source: "release/*"
           target: ${{ secrets.DEPLOY_PATH || '/var/www/freesurf' }}
 
       - name: Remote deploy steps
@@ -104,15 +104,6 @@ jobs:
               echo "Writing .env from secret"
               echo "${{ secrets.ENV_PROD }}" > .env
             fi
-            php -v || true
-            composer --version || true
-            if command -v composer >/dev/null 2>&1; then
-              composer install --no-interaction --prefer-dist --no-progress --no-dev
-            fi
-            php artisan key:generate --force || true
-            php artisan migrate --force || true
-            php artisan config:cache || true
-            php artisan route:cache || true
-            php artisan view:cache || true
-            php artisan horizon:terminate || true
-            (php artisan horizon &) || true
+            cd ${{ secrets.DEPLOY_PATH || '/var/www/freesurf' }}
+            docker compose pull || true
+            docker compose up -d --build

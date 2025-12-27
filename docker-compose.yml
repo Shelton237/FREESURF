@@ -1,0 +1,76 @@
+version: '3.9'
+
+services:
+  app:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    env_file:
+      - backend/.env
+    volumes:
+      - ./backend/storage:/var/www/html/storage
+      - ./backend/bootstrap/cache:/var/www/html/bootstrap/cache
+      - ./backend/.env:/var/www/html/.env:ro
+    depends_on:
+      - db
+      - redis
+
+  web:
+    image: nginx:stable-alpine
+    ports:
+      - "80:80"
+    volumes:
+      - ./backend:/var/www/html
+      - ./docker/nginx.conf:/etc/nginx/conf.d/default.conf:ro
+    depends_on:
+      - app
+
+  queue:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    command: php artisan horizon
+    env_file:
+      - backend/.env
+    volumes:
+      - ./backend/storage:/var/www/html/storage
+      - ./backend/bootstrap/cache:/var/www/html/bootstrap/cache
+      - ./backend/.env:/var/www/html/.env:ro
+    depends_on:
+      - redis
+      - db
+
+  scheduler:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    command: sh -lc "while true; do php artisan schedule:run --verbose --no-interaction; sleep 60; done"
+    env_file:
+      - backend/.env
+    volumes:
+      - ./backend/storage:/var/www/html/storage
+      - ./backend/bootstrap/cache:/var/www/html/bootstrap/cache
+      - ./backend/.env:/var/www/html/.env:ro
+    depends_on:
+      - redis
+      - db
+
+  redis:
+    image: redis:7-alpine
+    volumes:
+      - redis-data:/data
+
+  db:
+    image: mariadb:11
+    environment:
+      MYSQL_DATABASE: ${DB_DATABASE:-freesurf}
+      MYSQL_USER: ${DB_USERNAME:-freesurf}
+      MYSQL_PASSWORD: ${DB_PASSWORD:-freesurf}
+      MYSQL_ROOT_PASSWORD: ${DB_ROOT_PASSWORD:-root}
+    volumes:
+      - db-data:/var/lib/mysql
+
+volumes:
+  db-data:
+  redis-data:
+
