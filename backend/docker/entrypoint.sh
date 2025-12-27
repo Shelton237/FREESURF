@@ -3,14 +3,12 @@ set -e
 
 cd /var/www/html
 
-# Ensure .env exists
 if [ ! -f .env ]; then
   if [ -f .env.example ]; then
     cp .env.example .env
   fi
 fi
 
-# Laravel setup
 rm -f bootstrap/cache/packages.php bootstrap/cache/services.php || true
 if [ -z "$APP_KEY" ]; then
   php artisan key:generate --force || true

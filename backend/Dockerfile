@@ -4,18 +4,20 @@
 FROM composer:2 AS vendor
 WORKDIR /app
 COPY composer.json composer.lock ./
-RUN composer install --no-dev --prefer-dist --no-interaction --no-progress --optimize-autoloader
+RUN composer install --no-dev --prefer-dist --no-interaction --no-progress --optimize-autoloader \
+    --ignore-platform-req=ext-pcntl --ignore-platform-req=ext-posix --no-scripts
 
 # 2) Build assets (Vite)
 FROM node:20-alpine AS assets
 WORKDIR /app
+ARG SKIP_ASSETS=1
 COPY package.json package-lock.json* ./
-RUN npm ci --legacy-peer-deps
+RUN if [ "$SKIP_ASSETS" != "1" ]; then npm ci --legacy-peer-deps; else echo "Skipping npm ci"; fi
 COPY resources ./resources
 COPY vite.config.js ./vite.config.js
 COPY public ./public
 ENV SKIP_PWA=1
-RUN npm run build || npm run build:ci
+RUN if [ "$SKIP_ASSETS" != "1" ]; then npm run build || npm run build:ci; else mkdir -p public/build; fi
 
 # 3) Runtime (PHP-FPM)
 FROM php:8.2-fpm AS app
@@ -54,4 +56,3 @@ USER appuser
 EXPOSE 9000
 ENTRYPOINT ["/entrypoint.sh"]
 CMD ["php-fpm"]
-

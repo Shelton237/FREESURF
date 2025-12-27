@@ -7,6 +7,19 @@ services:
       dockerfile: Dockerfile
     env_file:
       - backend/.env
+    environment:
+      APP_ENV: production
+      APP_DEBUG: 'false'
+      DB_CONNECTION: mysql
+      DB_HOST: db
+      DB_PORT: 3306
+      DB_DATABASE: ${DB_DATABASE:-freesurf}
+      DB_USERNAME: ${DB_USERNAME:-freesurf}
+      DB_PASSWORD: ${DB_PASSWORD:-freesurf}
+      QUEUE_CONNECTION: redis
+      REDIS_CLIENT: predis
+      REDIS_HOST: redis
+      REDIS_PORT: 6379
     volumes:
       - ./backend/storage:/var/www/html/storage
       - ./backend/bootstrap/cache:/var/www/html/bootstrap/cache
@@ -32,6 +45,19 @@ services:
     command: php artisan horizon
     env_file:
       - backend/.env
+    environment:
+      APP_ENV: production
+      APP_DEBUG: 'false'
+      DB_CONNECTION: mysql
+      DB_HOST: db
+      DB_PORT: 3306
+      DB_DATABASE: ${DB_DATABASE:-freesurf}
+      DB_USERNAME: ${DB_USERNAME:-freesurf}
+      DB_PASSWORD: ${DB_PASSWORD:-freesurf}
+      QUEUE_CONNECTION: redis
+      REDIS_CLIENT: predis
+      REDIS_HOST: redis
+      REDIS_PORT: 6379
     volumes:
       - ./backend/storage:/var/www/html/storage
       - ./backend/bootstrap/cache:/var/www/html/bootstrap/cache
@@ -73,4 +99,3 @@ services:
 volumes:
   db-data:
   redis-data:
-
