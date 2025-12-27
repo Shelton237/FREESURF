@@ -85,4 +85,15 @@ Route::prefix('backoffice')->middleware(['auth', 'verified'])->group(function ()
     Route::get('/clients/{client}', [\App\Http\Controllers\Backoffice\ClientController::class, 'show'])->name('backoffice.clients.show');
     Route::post('/clients/{client}/eligibilites', [\App\Http\Controllers\Backoffice\ClientController::class, 'storeEligibilite'])->name('backoffice.clients.eligibilites.store');
     Route::post('/clients/{client}/installation/complete', [\App\Http\Controllers\Backoffice\ClientController::class, 'completeInstallation'])->name('backoffice.clients.installation.complete');
+
+    Route::get('/work-orders/create', [\App\Http\Controllers\Backoffice\WorkOrderController::class, 'create'])->name('backoffice.work-orders.create');
+    Route::post('/work-orders', [\App\Http\Controllers\Backoffice\WorkOrderController::class, 'store'])->name('backoffice.work-orders.store');
+});
+
+// Espace technicien
+Route::prefix('tech')->middleware(['auth','verified','role:technicien'])->group(function(){
+    Route::get('/', [\App\Http\Controllers\Tech\WorkOrderController::class, 'index'])->name('tech.dashboard');
+    Route::get('/work-orders/{workOrder}', [\App\Http\Controllers\Tech\WorkOrderController::class, 'show'])->name('tech.work-orders.show');
+    Route::post('/work-orders/{workOrder}/start', [\App\Http\Controllers\Tech\WorkOrderController::class, 'start'])->name('tech.work-orders.start');
+    Route::post('/work-orders/{workOrder}/complete', [\App\Http\Controllers\Tech\WorkOrderController::class, 'complete'])->name('tech.work-orders.complete');
 });

@@ -56,6 +56,10 @@ const completeInst = () => {
         </div>
       </div>
     </div>
+
+    <div class="border rounded p-4">
+      <h2 class="font-semibold mb-2">Créer une intervention</h2>
+      <a :href="`/backoffice/work-orders/create?client=${client.id}`" class="px-3 py-2 bg-gray-100 rounded border inline-block">Nouvelle intervention (assigner un technicien)</a>
+    </div>
   </div>
 </template>
-
