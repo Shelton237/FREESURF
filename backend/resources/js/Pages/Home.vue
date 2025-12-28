@@ -18,7 +18,7 @@ const props = defineProps({ appName: String, canLogin: Boolean, canRegister: Boo
           CuWiP — la plateforme FAI/WISP de <span class="text-brand">FREESURF</span>
         </h1>
         <p class="mt-4 text-gray-600">
-          GÃ©rez vos BTS, clients, Ã©ligibilitÃ©s, installations et facturation mensuelle avec notifications WhatsApp/SMS.
+          Gérez vos BTS, clients, éligibilités, installations et facturation mensuelle avec notifications WhatsApp/SMS.
         </p>
         <div class="mt-6 flex gap-3">
           <a href="/portal" class="px-5 py-3 bg-brand text-white rounded shadow">Portail client</a>
@@ -48,30 +48,30 @@ const props = defineProps({ appName: String, canLogin: Boolean, canRegister: Boo
     <!-- Features -->
     <section id="features" class="bg-gray-50">
       <div class="max-w-7xl mx-auto p-6 md:p-12">
-        <h2 class="text-2xl font-bold mb-4">FonctionnalitÃ©s clÃ©s</h2>
+        <h2 class="text-2xl font-bold mb-4">Fonctionnalités clés</h2>
         <div class="grid md:grid-cols-3 gap-4">
-          <FeatureCard title="Gestion BTS" text="CrÃ©ez vos stations (ville, code, GPS, composants, photos) et suivez la couverture." />
+          <FeatureCard title="Gestion BTS" text="Créez vos stations (ville, code, GPS, composants, photos) et suivez la couverture." />
           <FeatureCard title="Cycle client" text="Prospection → Éligibilité → Installation → Actif, avec historique et justificatifs." />
-          <FeatureCard title="Facturation auto" text="GÃ©nÃ©rez chaque mois les factures, exportez les PDFs, et marquez les paiements." />
-          <FeatureCard title="Notifications" text="PrÃ©venez vos clients via WhatsApp/SMS lors dâ€™Ã©missions et confirmations de paiement." />
-          <FeatureCard title="Dashboard" text="Statistiques et filtres dynamiques: clients par BTS, impayÃ©s, exclusions, etc." />
-          <FeatureCard title="PWA mobile" text="Application installable et utilisable hors-ligne pour les Ãéquipes terrain." />
+          <FeatureCard title="Facturation auto" text="Générez chaque mois les factures, exportez les PDFs, et marquez les paiements." />
+          <FeatureCard title="Notifications" text="Prévenez vos clients via WhatsApp/SMS lors d’émissions et confirmations de paiement." />
+          <FeatureCard title="Dashboard" text="Statistiques et filtres dynamiques: clients par BTS, impayés, exclusions, etc." />
+          <FeatureCard title="PWA mobile" text="Application installable et utilisable hors‑ligne pour les équipes terrain." />
         </div>
       </div>
     </section>
 
     <!-- Steps -->
     <section id="etapes" class="max-w-7xl mx-auto p-6 md:p-12">
-      <h2 class="text-2xl font-bold mb-4">Comment Ã§a marche ?</h2>
+      <h2 class="text-2xl font-bold mb-4">Comment ça marche ?</h2>
       <ol class="space-y-2 text-gray-700 list-decimal list-inside">
-        <li>Portail client: soumission de la demande (abonnement/rÃ©abonnement).</li>
-        <li>Backoffice: Ãétude d’€™Ã©ligibilitÃ© (couverture par BTS ou relai).</li>
-        <li>Installation: prise de rendezâ€‘vous et marquage terminÃ©.</li>
-        <li>Facturation: gÃ©nÃ©ration mensuelle, exclusions, envoi de PDF.</li>
+        <li>Portail client: soumission de la demande (abonnement/réabonnement).</li>
+        <li>Backoffice: étude d’éligibilité (couverture par BTS ou relai).</li>
+        <li>Installation: prise de rendez‑vous et marquage terminé.</li>
+        <li>Facturation: génération mensuelle, exclusions, envoi de PDF.</li>
         <li>Paiement: validation et notifications au client.</li>
       </ol>
       <div class="mt-6">
-        <a href="/portal" class="px-5 py-3 bg-brand text-white rounded">DÃ©marrer une demande</a>
+        <a href="/portal" class="px-5 py-3 bg-brand text-white rounded">Démarrer une demande</a>
       </div>
     </section>
 
@@ -79,13 +79,13 @@ const props = defineProps({ appName: String, canLogin: Boolean, canRegister: Boo
     <section class="bg-gray-50">
       <div class="max-w-7xl mx-auto p-6 md:p-12 grid md:grid-cols-2 gap-6">
         <div>
-          <h2 class="text-2xl font-bold mb-4">TÃ©moignages</h2>
+          <h2 class="text-2xl font-bold mb-4">Témoignages</h2>
           <div class="grid gap-3">
             <TestimonialCard v-for="(t, idx) in (props.testimonials || [])" :key="idx" v-bind="t" />
           </div>
         </div>
         <div>
-          <h2 class="text-2xl font-bold mb-4">ActualitÃ©s</h2>
+          <h2 class="text-2xl font-bold mb-4">Actualités</h2>
           <div class="grid gap-3">
             <div v-for="(n, idx) in (props.news || [])" :key="idx" class="p-5 rounded border bg-white">
               <div class="text-sm text-gray-500">{{ n.date }}</div>
@@ -98,7 +98,5 @@ const props = defineProps({ appName: String, canLogin: Boolean, canRegister: Boo
     </section>
 
   </PublicLayout>
-  
+
 </template>
-
-

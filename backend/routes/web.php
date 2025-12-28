@@ -71,7 +71,7 @@ Route::prefix('portal')->group(function () {
 });
 
 // Backoffice (Administration)
-Route::prefix('backoffice')->middleware(['auth', 'verified'])->group(function () {
+Route::prefix('backoffice')->middleware(['auth', 'verified','role:backoffice'])->group(function () {
     Route::get('/', function () {
         return Inertia::render('Backoffice/Dashboard');
     })->name('backoffice.dashboard');
@@ -88,6 +88,13 @@ Route::prefix('backoffice')->middleware(['auth', 'verified'])->group(function ()
 
     Route::get('/work-orders/create', [\App\Http\Controllers\Backoffice\WorkOrderController::class, 'create'])->name('backoffice.work-orders.create');
     Route::post('/work-orders', [\App\Http\Controllers\Backoffice\WorkOrderController::class, 'store'])->name('backoffice.work-orders.store');
+
+    Route::get('/admin/users', [\App\Http\Controllers\Backoffice\AdminUserController::class, 'index'])->name('backoffice.admin.users.index');
+    Route::get('/admin/users/create', [\App\Http\Controllers\Backoffice\AdminUserController::class, 'create'])->name('backoffice.admin.users.create');
+    Route::post('/admin/users', [\App\Http\Controllers\Backoffice\AdminUserController::class, 'store'])->name('backoffice.admin.users.store');
+    Route::get('/admin/users/{user}/edit', [\App\Http\Controllers\Backoffice\AdminUserController::class, 'edit'])->name('backoffice.admin.users.edit');
+    Route::put('/admin/users/{user}', [\App\Http\Controllers\Backoffice\AdminUserController::class, 'update'])->name('backoffice.admin.users.update');
+    Route::delete('/admin/users/{user}', [\App\Http\Controllers\Backoffice\AdminUserController::class, 'destroy'])->name('backoffice.admin.users.destroy');
 });
 
 // Espace technicien

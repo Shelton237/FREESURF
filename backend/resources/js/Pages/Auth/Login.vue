@@ -6,6 +6,7 @@ import InputLabel from '@/Components/InputLabel.vue'
 import PrimaryButton from '@/Components/PrimaryButton.vue'
 import TextInput from '@/Components/TextInput.vue'
 import { Head, Link, useForm } from '@inertiajs/vue3'
+import { ref } from 'vue'
 
 defineProps({
   canResetPassword: { type: Boolean },
@@ -17,6 +18,8 @@ const form = useForm({
   password: '',
   remember: false,
 })
+
+const show = ref(false)
 
 const submit = () => {
   form.post(route('login'), {
@@ -33,7 +36,7 @@ const submit = () => {
       {{ status }}
     </div>
 
-    <form @submit.prevent="submit">
+    <form @submit.prevent="submit" class="space-y-4">
       <div>
         <InputLabel for="email" value="E-mail" />
 
@@ -50,18 +53,12 @@ const submit = () => {
         <InputError class="mt-2" :message="form.errors.email" />
       </div>
 
-      <div class="mt-4">
+      <div>
         <InputLabel for="password" value="Mot de passe" />
-
-        <TextInput
-          id="password"
-          type="password"
-          class="mt-1 block w-full"
-          v-model="form.password"
-          required
-          autocomplete="current-password"
-        />
-
+        <div class="relative">
+          <TextInput :type="show ? 'text' : 'password'" id="password" class="mt-1 block w-full pr-20" v-model="form.password" required autocomplete="current-password" />
+          <button type="button" class="absolute inset-y-0 right-0 mt-1 mr-2 px-2 text-sm text-gray-600 hover:text-brand" @click="show = !show">{{ show ? 'Masquer' : 'Afficher' }}</button>
+        </div>
         <InputError class="mt-2" :message="form.errors.password" />
       </div>
 
@@ -72,21 +69,24 @@ const submit = () => {
         </label>
       </div>
 
-      <div class="mt-4 flex items-center justify-end">
+      <div class="mt-4 flex items-center justify-between">
         <Link
           v-if="canResetPassword"
           :href="route('password.request')"
-          class="rounded-md text-sm text-gray-600 underline hover:text-gray-900 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 dark:text-gray-400 dark:hover:text-gray-100 dark:focus:ring-offset-gray-800"
+          class="text-sm text-brand hover:underline"
         >
-          Mot de passe oublié© ?
+          Mot de passe oublié ?
         </Link>
 
-        <PrimaryButton class="ms-4" :class="{ 'opacity-25': form.processing }" :disabled="form.processing">
-          Connexion
-        </PrimaryButton>
+        <PrimaryButton class="ms-4" :class="{ 'opacity-25': form.processing }" :disabled="form.processing">Se connecter</PrimaryButton>
       </div>
     </form>
   </GuestLayout>
   
 </template>
+
+
+
+
+
 

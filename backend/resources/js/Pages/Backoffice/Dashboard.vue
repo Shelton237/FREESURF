@@ -13,6 +13,7 @@
     <div class="mt-6 flex gap-3">
       <a href="/backoffice/bts" class="px-3 py-2 bg-gray-100 rounded border">Gérer les BTS</a>
       <a href="/backoffice/clients" class="px-3 py-2 bg-gray-100 rounded border">Gérer les clients</a>
+      <a href="/backoffice/admin/users" class="px-3 py-2 bg-gray-100 rounded border">Utilisateurs</a>
     </div>
   </div>
 </template>
