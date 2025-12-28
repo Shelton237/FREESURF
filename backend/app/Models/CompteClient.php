@@ -9,11 +9,12 @@ class CompteClient extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['telephone', 'email', 'nom', 'statut'];
+    protected $fillable = ['telephone', 'email', 'nom', 'statut', 'password'];
+
+    protected $hidden = ['password'];
 
     public function demandes()
     {
         return $this->hasMany(Demande::class);
     }
 }
-

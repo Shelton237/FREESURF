@@ -7,6 +7,7 @@ use App\Models\CompteClient;
 use App\Models\Demande;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Hash;
 use Inertia\Inertia;
 use Inertia\Response;
 
@@ -21,15 +22,13 @@ class CompteController extends Controller
     {
         $validated = $request->validate([
             'telephone' => ['required', 'string'],
-            'email' => ['nullable', 'email'],
+            'password' => ['required', 'string'],
         ]);
 
-        $compte = CompteClient::where('telephone', $validated['telephone'])
-            ->when($validated['email'] ?? null, fn ($query, $email) => $query->where('email', $email))
-            ->first();
+        $compte = CompteClient::where('telephone', $validated['telephone'])->first();
 
-        if (! $compte) {
-            return back()->with('error', 'Impossible de trouver un compte avec ces informations.');
+        if (! $compte || ! $compte->password || ! Hash::check($validated['password'], $compte->password)) {
+            return back()->with('error', 'Identifiants incorrects.');
         }
 
         $request->session()->put('portal_compte_id', $compte->id);
@@ -51,7 +50,7 @@ class CompteController extends Controller
         $compte = CompteClient::findOrFail($compteId);
         $demandes = Demande::where('compte_client_id', $compte->id)
             ->latest()
-            ->get(['id','type','statut','created_at','adresse']);
+            ->get(['id', 'type', 'statut', 'created_at', 'adresse']);
 
         return Inertia::render('Portal/Compte/Dashboard', [
             'compte' => [

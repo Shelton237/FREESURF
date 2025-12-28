@@ -5,7 +5,7 @@ import PublicLayout from '@/Layouts/PublicLayout.vue'
 
 defineOptions({ layout: PublicLayout })
 
-const form = ref({ telephone: '', email: '' })
+const form = ref({ telephone: '', password: '' })
 const submitting = ref(false)
 
 const submit = () => {
@@ -31,8 +31,8 @@ const submit = () => {
           <input v-model="form.telephone" class="w-full border rounded-lg p-3 mt-1" placeholder="Ex: 699 00 00 00" />
         </label>
         <label class="block">
-          <span class="text-sm text-gray-600">E-mail (optionnel)</span>
-          <input v-model="form.email" class="w-full border rounded-lg p-3 mt-1" placeholder="E-mail de facturation si renseigné" />
+          <span class="text-sm text-gray-600">Mot de passe *</span>
+          <input v-model="form.password" type="password" class="w-full border rounded-lg p-3 mt-1" placeholder="••••••••" />
         </label>
       </div>
 

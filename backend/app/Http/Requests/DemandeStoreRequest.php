@@ -22,7 +22,7 @@ class DemandeStoreRequest extends FormRequest
             'lat' => ['nullable', 'numeric', 'between:-90,90'],
             'lng' => ['nullable', 'numeric', 'between:-180,180'],
             'commentaire' => ['nullable', 'string'],
+            'password' => ['required', 'string', 'min:6', 'confirmed'],
         ];
     }
 }
-

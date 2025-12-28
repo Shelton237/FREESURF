@@ -25,13 +25,15 @@ const form = ref({
   lat: '',
   lng: '',
   commentaire: '',
+  password: '',
+  password_confirmation: '',
 })
 
 const submitting = ref(false)
 
 const requiredForStep = (step) => {
   if (step === 0) {
-    return form.value.nom.trim() && form.value.telephone.trim()
+    return form.value.nom.trim() && form.value.telephone.trim() && form.value.password.length >= 6 && form.value.password === form.value.password_confirmation
   }
   if (step === 1) {
     return form.value.adresse.trim() && form.value.lat && form.value.lng
@@ -163,6 +165,14 @@ const submit = () => {
               <label class="block">
                 <span class="text-sm text-gray-600">E-mail de facturation (entreprise)</span>
                 <input v-model="form.email_facturation" class="w-full border rounded-lg p-3 mt-1" placeholder="optionnel" />
+              </label>
+              <label class="block">
+                <span class="text-sm text-gray-600">Créer un mot de passe *</span>
+                <input v-model="form.password" type="password" class="w-full border rounded-lg p-3 mt-1" placeholder="Au moins 6 caractères" />
+              </label>
+              <label class="block">
+                <span class="text-sm text-gray-600">Confirmer le mot de passe *</span>
+                <input v-model="form.password_confirmation" type="password" class="w-full border rounded-lg p-3 mt-1" placeholder="Retapez le mot de passe" />
               </label>
             </div>
           </section>
