@@ -1,4 +1,6 @@
 <script setup>
+import BackofficeLayout from '@/Layouts/BackofficeLayout.vue'
+defineOptions({ layout: BackofficeLayout })
 defineProps({ items: Object })
 </script>
 
@@ -30,4 +32,3 @@ defineProps({ items: Object })
     </table>
   </div>
 </template>
-

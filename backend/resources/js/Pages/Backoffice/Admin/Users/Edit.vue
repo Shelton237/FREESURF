@@ -1,7 +1,9 @@
 <script setup>
+import BackofficeLayout from '@/Layouts/BackofficeLayout.vue'
 import { ref } from 'vue'
 import { router } from '@inertiajs/vue3'
 
+defineOptions({ layout: BackofficeLayout })
 const props = defineProps({ userData: Object })
 const form = ref({ name: props.userData.name, email: props.userData.email, role: props.userData.role, password: '' })
 const submitting = ref(false)
@@ -28,14 +30,15 @@ const submit = () => {
         <input v-model="form.password" type="password" class="w-full border rounded p-2" />
       </div>
       <div>
-        <label class="block text-sm">Rôle</label>
+        <label class="block text-sm">RÃƒÂ´le</label>
         <select v-model="form.role" class="w-full border rounded p-2">
           <option value="backoffice">Backoffice</option>
           <option value="technicien">Technicien</option>
         </select>
       </div>
-      <button :disabled="submitting" @click="submit" class="px-4 py-2 bg-brand text-white rounded">Mettre à jour</button>
+      <button :disabled="submitting" @click="submit" class="px-4 py-2 bg-brand text-white rounded">Mettre ÃƒÂ  jour</button>
     </div>
   </div>
 </template>
+
 

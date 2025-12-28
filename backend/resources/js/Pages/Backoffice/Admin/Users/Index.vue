@@ -1,6 +1,8 @@
 <script setup>
+import BackofficeLayout from '@/Layouts/BackofficeLayout.vue'
 import { Link, router } from '@inertiajs/vue3'
 defineProps({ users: Object })
+defineOptions({ layout: BackofficeLayout })
 
 const destroyUser = (id) => {
   if (confirm('Supprimer cet utilisateur ?')) {
@@ -38,4 +40,3 @@ const destroyUser = (id) => {
     </table>
   </div>
 </template>
-

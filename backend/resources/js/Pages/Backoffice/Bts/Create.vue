@@ -1,7 +1,9 @@
-﻿<script setup>
+<script setup>
+import BackofficeLayout from '@/Layouts/BackofficeLayout.vue'
 import { ref } from 'vue'
 import { router } from '@inertiajs/vue3'
 
+defineOptions({ layout: BackofficeLayout })
 const form = ref({ ville: '', lat: '', lng: '', composants: [] })
 const submitting = ref(false)
 const submit = () => {
@@ -33,5 +35,7 @@ const submit = () => {
   </div>
   
 </template>
+
+
 
 
