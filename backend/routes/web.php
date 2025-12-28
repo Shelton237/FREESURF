@@ -50,7 +50,7 @@ Route::get('/', function () {
 });
 
 Route::get('/dashboard', function () {
-    return Inertia::render('Dashboard');
+    return redirect()->route('backoffice.dashboard');
 })->middleware(['auth', 'verified'])->name('dashboard');
 
 Route::middleware('auth')->group(function () {
@@ -72,9 +72,7 @@ Route::prefix('portal')->group(function () {
 
 // Backoffice (Administration)
 Route::prefix('backoffice')->middleware(['auth', 'verified','role:backoffice'])->group(function () {
-    Route::get('/', function () {
-        return Inertia::render('Backoffice/Dashboard');
-    })->name('backoffice.dashboard');
+    Route::get('/', \App\Http\Controllers\Backoffice\DashboardController::class)->name('backoffice.dashboard');
     Route::get('/bts', [\App\Http\Controllers\Backoffice\BtsController::class, 'index'])->name('backoffice.bts.index');
     Route::get('/bts/create', [\App\Http\Controllers\Backoffice\BtsController::class, 'create'])->name('backoffice.bts.create');
     Route::post('/bts', [\App\Http\Controllers\Backoffice\BtsController::class, 'store'])->name('backoffice.bts.store');
