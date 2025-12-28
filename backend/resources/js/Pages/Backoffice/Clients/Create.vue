@@ -2,70 +2,98 @@
 import BackofficeLayout from '@/Layouts/BackofficeLayout.vue'
 import { ref } from 'vue'
 import { router } from '@inertiajs/vue3'
+
 defineOptions({ layout: BackofficeLayout })
 defineProps({ bts: Array, partners: Array })
 
-const form = ref({ nom: '', telephone: '', type: 'domicile', email_facturation: '', bts_id: '', partner_id: '', lat: '', lng: '' })
+const form = ref({
+  nom: '',
+  telephone: '',
+  type: 'domicile',
+  email_facturation: '',
+  bts_id: '',
+  partner_id: '',
+  lat: '',
+  lng: '',
+})
+
 const submitting = ref(false)
+
 const submit = () => {
   submitting.value = true
-  router.post('/backoffice/clients', form.value, { onFinish: () => (submitting.value = false) })
+  router.post('/backoffice/clients', form.value, {
+    onFinish: () => (submitting.value = false),
+  })
 }
 </script>
 
 <template>
-  <div class=Ã¢â‚¬â€œp-6 max-w-2xlÃ¢â‚¬â€œ>
-    <h1 class=Ã¢â‚¬â€œtext-2xl font-semibold mb-4Ã¢â‚¬â€œ>Nouveau client</h1>
-    <div class=Ã¢â‚¬â€œgrid gap-3Ã¢â‚¬â€œ>
+  <div class="p-6 max-w-2xl mx-auto space-y-4">
+    <h1 class="text-2xl font-semibold">Nouveau client</h1>
+
+    <div class="grid gap-4">
       <div>
-        <label class=Ã¢â‚¬â€œblock text-smÃ¢â‚¬â€œ>Nom</label>
-        <input v-model=Ã¢â‚¬â€œform.nomÃ¢â‚¬â€œ class=Ã¢â‚¬â€œw-full border rounded p-2Ã¢â‚¬â€œ />
+        <label class="block text-sm font-medium text-gray-600">Nom</label>
+        <input v-model="form.nom" class="w-full border rounded p-2" />
       </div>
+
       <div>
-        <label class=Ã¢â‚¬â€œblock text-smÃ¢â‚¬â€œ>TÃƒÆ’Ã‚Â©lÃƒÆ’Ã‚Â©phone</label>
-        <input v-model=Ã¢â‚¬â€œform.telephoneÃ¢â‚¬â€œ class=Ã¢â‚¬â€œw-full border rounded p-2Ã¢â‚¬â€œ />
+        <label class="block text-sm font-medium text-gray-600">Téléphone</label>
+        <input v-model="form.telephone" class="w-full border rounded p-2" />
       </div>
+
       <div>
-        <label class=Ã¢â‚¬â€œblock text-smÃ¢â‚¬â€œ>Type</label>
-        <select v-model=Ã¢â‚¬â€œform.typeÃ¢â‚¬â€œ class=Ã¢â‚¬â€œw-full border rounded p-2Ã¢â‚¬â€œ>
-          <option value=Ã¢â‚¬â€œdomicileÃ¢â‚¬â€œ>Domicile</option>
-          <option value=Ã¢â‚¬â€œentrepriseÃ¢â‚¬â€œ>Entreprise</option>
+        <label class="block text-sm font-medium text-gray-600">Type</label>
+        <select v-model="form.type" class="w-full border rounded p-2">
+          <option value="domicile">Domicile</option>
+          <option value="entreprise">Entreprise</option>
         </select>
       </div>
-      <div v-if=Ã¢â‚¬â€œform.type === 'entreprise'Ã¢â‚¬â€œ>
-        <label class=Ã¢â‚¬â€œblock text-smÃ¢â‚¬â€œ>EÃ¢â‚¬â€˜mail de facturation</label>
-        <input v-model=Ã¢â‚¬â€œform.email_facturationÃ¢â‚¬â€œ class=Ã¢â‚¬â€œw-full border rounded p-2Ã¢â‚¬â€œ />
+
+      <div v-if="form.type === 'entreprise'">
+        <label class="block text-sm font-medium text-gray-600">Email de facturation</label>
+        <input v-model="form.email_facturation" class="w-full border rounded p-2" />
       </div>
-      <div class=Ã¢â‚¬â€œgrid grid-cols-2 gap-3Ã¢â‚¬â€œ>
+
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
         <div>
-          <label class=Ã¢â‚¬â€œblock text-smÃ¢â‚¬â€œ>BTS</label>
-          <select v-model=Ã¢â‚¬â€œform.bts_idÃ¢â‚¬â€œ class=Ã¢â‚¬â€œw-full border rounded p-2Ã¢â‚¬â€œ>
-            <option value=Ã¢â‚¬â€œÃ¢â‚¬â€œ>ÃƒÂ¢Ã¢â€šÂ¬Ã¢â‚¬Å“</option>
-            <option v-for=Ã¢â‚¬â€œb in btsÃ¢â‚¬â€œ :key=Ã¢â‚¬â€œb.idÃ¢â‚¬â€œ :value=Ã¢â‚¬â€œb.idÃ¢â‚¬â€œ>{{ b.code }} ({{ b.ville }})</option>
+          <label class="block text-sm font-medium text-gray-600">BTS</label>
+          <select v-model="form.bts_id" class="w-full border rounded p-2">
+            <option value="">-- Non assignée --</option>
+            <option v-for="b in bts" :key="b.id" :value="b.id">
+              {{ b.code }} ({{ b.ville }})
+            </option>
           </select>
         </div>
         <div>
-          <label class=Ã¢â‚¬â€œblock text-smÃ¢â‚¬â€œ>Partenaire</label>
-          <select v-model=Ã¢â‚¬â€œform.partner_idÃ¢â‚¬â€œ class=Ã¢â‚¬â€œw-full border rounded p-2Ã¢â‚¬â€œ>
-            <option value=Ã¢â‚¬â€œÃ¢â‚¬â€œ>ÃƒÂ¢Ã¢â€šÂ¬Ã¢â‚¬Å“</option>
-            <option v-for=Ã¢â‚¬â€œp in partnersÃ¢â‚¬â€œ :key=Ã¢â‚¬â€œp.idÃ¢â‚¬â€œ :value=Ã¢â‚¬â€œp.idÃ¢â‚¬â€œ>{{ p.nom }}</option>
+          <label class="block text-sm font-medium text-gray-600">Partenaire</label>
+          <select v-model="form.partner_id" class="w-full border rounded p-2">
+            <option value="">-- Aucun --</option>
+            <option v-for="p in partners" :key="p.id" :value="p.id">
+              {{ p.nom }}
+            </option>
           </select>
         </div>
       </div>
-      <div class=Ã¢â‚¬â€œgrid grid-cols-2 gap-3Ã¢â‚¬â€œ>
+
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
         <div>
-          <label class=Ã¢â‚¬â€œblock text-smÃ¢â‚¬â€œ>Latitude</label>
-          <input v-model=Ã¢â‚¬â€œform.latÃ¢â‚¬â€œ class=Ã¢â‚¬â€œw-full border rounded p-2Ã¢â‚¬â€œ />
+          <label class="block text-sm font-medium text-gray-600">Latitude</label>
+          <input v-model="form.lat" class="w-full border rounded p-2" />
         </div>
         <div>
-          <label class=Ã¢â‚¬â€œblock text-smÃ¢â‚¬â€œ>Longitude</label>
-          <input v-model=Ã¢â‚¬â€œform.lngÃ¢â‚¬â€œ class=Ã¢â‚¬â€œw-full border rounded p-2Ã¢â‚¬â€œ />
+          <label class="block text-sm font-medium text-gray-600">Longitude</label>
+          <input v-model="form.lng" class="w-full border rounded p-2" />
         </div>
       </div>
-      <button :disabled=Ã¢â‚¬â€œsubmittingÃ¢â‚¬â€œ @click=Ã¢â‚¬â€œsubmitÃ¢â‚¬â€œ class=Ã¢â‚¬â€œpx-4 py-2 bg-brand text-white roundedÃ¢â‚¬â€œ>Enregistrer</button>
+
+      <button
+        :disabled="submitting"
+        @click="submit"
+        class="px-4 py-2 bg-brand text-white rounded disabled:opacity-60"
+      >
+        Enregistrer
+      </button>
     </div>
   </div>
 </template>
-
-
-

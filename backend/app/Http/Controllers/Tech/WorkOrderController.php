@@ -3,7 +3,6 @@
 namespace App\Http\Controllers\Tech;
 
 use App\Http\Controllers\Controller;
-use App\Http\Requests\InstallationCompleteRequest;
 use App\Models\Installation;
 use App\Models\WorkOrder;
 use Illuminate\Http\RedirectResponse;
@@ -45,24 +44,59 @@ class WorkOrderController extends Controller
         return back()->with('success', 'Intervention démarrée');
     }
 
-    public function complete(InstallationCompleteRequest $request, WorkOrder $workOrder): RedirectResponse
+    public function complete(Request $request, WorkOrder $workOrder): RedirectResponse
     {
         abort_unless($workOrder->assigned_to === $request->user()->id, 403);
-        $workOrder->update([
+        $rules = [
+            'date' => ['nullable','date'],
+            'commentaire' => ['nullable','string'],
+        ];
+
+        if ($workOrder->type === 'install') {
+            $rules['date'][0] = 'required';
+        }
+
+        if ($workOrder->type === 'survey') {
+            $rules['survey_result'] = ['required','in:available,not_available'];
+            $rules['survey_reason'] = ['nullable','string'];
+            $rules['survey_follow_up'] = ['nullable','boolean'];
+        }
+
+        $data = $request->validate($rules);
+
+        $updatePayload = [
             'status' => 'completed',
             'completed_at' => now(),
-            'notes' => $request->input('commentaire')
-        ]);
+            'notes' => $data['commentaire'] ?? null,
+        ];
+
+        if ($workOrder->type === 'survey') {
+            $updatePayload['survey_result'] = $data['survey_result'];
+            $updatePayload['survey_reason'] = $data['survey_reason'] ?? null;
+            $updatePayload['survey_follow_up'] = (bool) ($data['survey_follow_up'] ?? false);
+        }
+
+        $workOrder->update($updatePayload);
         $workOrder->events()->create(['type' => 'status', 'payload' => ['to' => 'completed']]);
 
         // Si c'est une installation, marquer le client actif
         if ($workOrder->type === 'install' && $workOrder->client_id) {
-            $client = $workOrder->client; $client->refresh();
+            $client = $workOrder->client;
+            $client->refresh();
             $inst = $client->installation ?: new Installation(['client_id' => $client->id]);
-            $inst->date = $request->input('date') ?: now()->toDateString();
-            $inst->commentaire = $request->input('commentaire');
-            $inst->terminee = true; $inst->user_id = $request->user()->id; $inst->save();
-            $client->statut = 'actif'; $client->save();
+            $inst->date = $data['date'] ?? now()->toDateString();
+            $inst->commentaire = $data['commentaire'] ?? null;
+            $inst->terminee = true;
+            $inst->user_id = $request->user()->id;
+            $inst->save();
+            $client->statut = 'actif';
+            $client->save();
+        } elseif ($workOrder->type === 'survey' && $workOrder->client_id) {
+            $client = $workOrder->client;
+            if ($client) {
+                $client->statut = $data['survey_result'] === 'available' ? 'eligible' : 'non_eligible';
+                $client->save();
+            }
         }
 
         return back()->with('success', 'Intervention terminée');

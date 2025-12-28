@@ -32,5 +32,14 @@ class DatabaseSeeder extends Seeder
                 'role' => 'technicien',
             ]
         );
+
+        $this->call([
+            PartnerSeeder::class,
+            BtsSeeder::class,
+            ClientSeeder::class,
+            DemandeSeeder::class,
+            SavTicketSeeder::class,
+            WorkOrderSeeder::class,
+        ]);
     }
 }

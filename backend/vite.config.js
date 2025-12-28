@@ -4,6 +4,20 @@ import vue from '@vitejs/plugin-vue';
 import { VitePWA } from 'vite-plugin-pwa';
 const disablePWA = process.env.SKIP_PWA === '1';
 
+const ensureAssetMeta = () => ({
+    name: 'manifest-asset-meta-fix',
+    apply: 'build',
+    enforce: 'post',
+    generateBundle(_, bundle) {
+        Object.values(bundle).forEach((chunk) => {
+            if (chunk.type === 'asset') {
+                chunk.names = chunk.names ?? [];
+                chunk.originalFileNames = chunk.originalFileNames ?? [];
+            }
+        });
+    },
+});
+
 export default defineConfig({
     server: {
         host: '127.0.0.1',
@@ -61,6 +75,7 @@ export default defineConfig({
                 ],
             },
         }),
+        ensureAssetMeta(),
     ],
 });
 

@@ -23,6 +23,12 @@ defineProps({ appName: { type: String, default: 'FREESURF' } })
     </header>
 
     <main class="flex-1">
+      <div v-if="$page.props.flash?.success" class="bg-green-50 text-green-700 text-sm px-4 py-2 text-center">
+        {{ $page.props.flash.success }}
+      </div>
+      <div v-if="$page.props.flash?.error" class="bg-red-50 text-red-600 text-sm px-4 py-2 text-center">
+        {{ $page.props.flash.error }}
+      </div>
       <slot />
     </main>
 

@@ -9,7 +9,10 @@ const navLinks = [
   { href: '/backoffice', label: 'Dashboard', match: '/backoffice' },
   { href: '/backoffice/bts', label: 'BTS', match: '/backoffice/bts' },
   { href: '/backoffice/clients', label: 'Clients', match: '/backoffice/clients' },
-  { href: '/backoffice/work-orders/create', label: 'Interventions', match: '/backoffice/work-orders' },
+  { href: '/backoffice/demandes', label: 'Demandes', match: '/backoffice/demandes' },
+  { href: '/backoffice/work-orders', label: 'Interventions', match: '/backoffice/work-orders' },
+  { href: '/backoffice/work-orders/surveys', label: 'Analyse surveys', match: '/backoffice/work-orders/surveys' },
+  { href: '/backoffice/sav', label: 'SAV', match: '/backoffice/sav' },
   { href: '/backoffice/admin/users', label: 'Utilisateurs', match: '/backoffice/admin/users' },
 ]
 

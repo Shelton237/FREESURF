@@ -9,6 +9,7 @@ use App\Models\Client;
 use App\Models\Partner;
 use App\Models\Eligibilite;
 use App\Models\Installation;
+use App\Models\User;
 use App\Http\Requests\EligibiliteStoreRequest;
 use App\Http\Requests\InstallationCompleteRequest;
 use Illuminate\Http\RedirectResponse;
@@ -52,8 +53,35 @@ class ClientController extends Controller
     public function show(Client $client): \Inertia\Response
     {
         $client->load(['bts', 'partner', 'eligibilites' => function($q){ $q->latest(); }, 'installation']);
+
+        $savTickets = $client->savTickets()
+            ->with('assignee:id,name')
+            ->latest()
+            ->take(10)
+            ->get()
+            ->map(fn ($ticket) => [
+                'id' => $ticket->id,
+                'subject' => $ticket->subject,
+                'status' => $ticket->status,
+                'priority' => $ticket->priority,
+                'assigned_to' => $ticket->assignee?->name,
+                'channel' => $ticket->channel,
+                'type' => $ticket->type,
+                'created_at' => optional($ticket->created_at)->toDateTimeString(),
+                'resolved_at' => optional($ticket->resolved_at)->toDateTimeString(),
+            ]);
+
+        $savOptions = [
+            'types' => ['incident','assistance','reclamation'],
+            'channels' => ['phone','whatsapp','portal','email'],
+            'priorities' => ['low','normal','high'],
+            'assignees' => User::whereIn('role', ['backoffice','technicien'])->orderBy('name')->get(['id','name']),
+        ];
+
         return Inertia::render('Backoffice/Clients/Show', [
             'client' => $client,
+            'savTickets' => $savTickets,
+            'savOptions' => $savOptions,
         ]);
     }
 

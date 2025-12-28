@@ -48,10 +48,71 @@ class DashboardController extends Controller
             'clients' => $months->map(fn ($m) => (int) ($clientsMonthly[$m] ?? 0)),
         ];
 
+        $btsWithCoords = Bts::select('id', 'code', 'ville', 'lat', 'lng')
+            ->whereNotNull('lat')
+            ->whereNotNull('lng')
+            ->withCount([
+                'clients as clients_actifs' => function ($query) {
+                    $query->where('statut', 'actif');
+                },
+            ])
+            ->get();
+
+        $mapBts = $btsWithCoords->map(fn ($bts) => [
+            'id' => $bts->id,
+            'code' => $bts->code,
+            'ville' => $bts->ville,
+            'lat' => (float) $bts->lat,
+            'lng' => (float) $bts->lng,
+            'clients' => (int) ($bts->clients_actifs ?? 0),
+            'url' => route('backoffice.bts.show', $bts),
+        ]);
+
+        $clientsWithCoords = Client::select('id', 'code', 'nom', 'lat', 'lng', 'statut', 'bts_id', 'updated_at')
+            ->whereNotNull('lat')
+            ->whereNotNull('lng')
+            ->orderByDesc('updated_at')
+            ->limit(100)
+            ->with('bts:id,code')
+            ->get();
+
+        $mapClients = $clientsWithCoords->map(fn ($client) => [
+            'id' => $client->id,
+            'code' => $client->code,
+            'nom' => $client->nom,
+            'statut' => $client->statut,
+            'lat' => (float) $client->lat,
+            'lng' => (float) $client->lng,
+            'bts' => $client->bts?->code,
+            'url' => route('backoffice.clients.show', $client),
+        ]);
+
+        $defaultBounds = [
+            'southWest' => ['lat' => 3.4, 'lng' => 9.3],
+            'northEast' => ['lat' => 4.6, 'lng' => 11.9],
+        ];
+
+        $map = [
+            'bts' => $mapBts,
+            'clients' => $mapClients,
+            'center' => [
+                'lat' => $btsWithCoords->avg('lat') ?? $clientsWithCoords->avg('lat') ?? 3.95,
+                'lng' => $btsWithCoords->avg('lng') ?? $clientsWithCoords->avg('lng') ?? 10.6,
+            ],
+            'bounds' => $defaultBounds,
+        ];
+
+        $filters = [
+            'villes' => Bts::select('ville')->whereNotNull('ville')->distinct()->orderBy('ville')->pluck('ville'),
+            'statuts' => Client::select('statut')->whereNotNull('statut')->distinct()->orderBy('statut')->pluck('statut'),
+        ];
+
         return Inertia::render('Backoffice/Dashboard', [
             'stats' => $stats,
             'clientsByBts' => $clientsByBts,
             'series' => $series,
+            'map' => $map,
+            'filters' => $filters,
         ]);
     }
 }

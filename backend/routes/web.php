@@ -68,14 +68,23 @@ Route::prefix('portal')->group(function () {
     })->name('portal.home');
     Route::get('/demandes/nouvelle', [\App\Http\Controllers\Portal\DemandeController::class, 'create'])->name('portal.demandes.create');
     Route::post('/demandes', [\App\Http\Controllers\Portal\DemandeController::class, 'store'])->name('portal.demandes.store');
+
+    Route::get('/compte/login', [\App\Http\Controllers\Portal\CompteController::class, 'showLogin'])->name('portal.compte.login');
+    Route::post('/compte/login', [\App\Http\Controllers\Portal\CompteController::class, 'login']);
+    Route::post('/compte/logout', [\App\Http\Controllers\Portal\CompteController::class, 'logout'])->name('portal.compte.logout');
+
+    Route::middleware('portal.compte')->group(function () {
+        Route::get('/compte', [\App\Http\Controllers\Portal\CompteController::class, 'dashboard'])->name('portal.compte.dashboard');
+    });
 });
 
 // Backoffice (Administration)
-Route::prefix('backoffice')->middleware(['auth', 'verified','role:backoffice'])->group(function () {
+Route::prefix('backoffice')->middleware(['auth', 'verified'])->group(function () {
     Route::get('/', \App\Http\Controllers\Backoffice\DashboardController::class)->name('backoffice.dashboard');
     Route::get('/bts', [\App\Http\Controllers\Backoffice\BtsController::class, 'index'])->name('backoffice.bts.index');
     Route::get('/bts/create', [\App\Http\Controllers\Backoffice\BtsController::class, 'create'])->name('backoffice.bts.create');
     Route::post('/bts', [\App\Http\Controllers\Backoffice\BtsController::class, 'store'])->name('backoffice.bts.store');
+    Route::get('/bts/{bts}', [\App\Http\Controllers\Backoffice\BtsController::class, 'show'])->name('backoffice.bts.show');
 
     Route::get('/clients', [\App\Http\Controllers\Backoffice\ClientController::class, 'index'])->name('backoffice.clients.index');
     Route::get('/clients/create', [\App\Http\Controllers\Backoffice\ClientController::class, 'create'])->name('backoffice.clients.create');
@@ -84,8 +93,14 @@ Route::prefix('backoffice')->middleware(['auth', 'verified','role:backoffice'])-
     Route::post('/clients/{client}/eligibilites', [\App\Http\Controllers\Backoffice\ClientController::class, 'storeEligibilite'])->name('backoffice.clients.eligibilites.store');
     Route::post('/clients/{client}/installation/complete', [\App\Http\Controllers\Backoffice\ClientController::class, 'completeInstallation'])->name('backoffice.clients.installation.complete');
 
+    Route::get('/work-orders', [\App\Http\Controllers\Backoffice\WorkOrderController::class, 'index'])->name('backoffice.work-orders.index');
     Route::get('/work-orders/create', [\App\Http\Controllers\Backoffice\WorkOrderController::class, 'create'])->name('backoffice.work-orders.create');
     Route::post('/work-orders', [\App\Http\Controllers\Backoffice\WorkOrderController::class, 'store'])->name('backoffice.work-orders.store');
+    Route::get('/work-orders/surveys', [\App\Http\Controllers\Backoffice\WorkOrderController::class, 'surveys'])->name('backoffice.work-orders.surveys');
+    Route::get('/demandes', [\App\Http\Controllers\Backoffice\DemandeController::class, 'index'])->name('backoffice.demandes.index');
+    Route::get('/sav', [\App\Http\Controllers\Backoffice\SavTicketController::class, 'index'])->name('backoffice.sav.index');
+    Route::post('/sav', [\App\Http\Controllers\Backoffice\SavTicketController::class, 'store'])->name('backoffice.sav.store');
+    Route::patch('/sav/{savTicket}', [\App\Http\Controllers\Backoffice\SavTicketController::class, 'update'])->name('backoffice.sav.update');
 
     Route::get('/admin/users', [\App\Http\Controllers\Backoffice\AdminUserController::class, 'index'])->name('backoffice.admin.users.index');
     Route::get('/admin/users/create', [\App\Http\Controllers\Backoffice\AdminUserController::class, 'create'])->name('backoffice.admin.users.create');

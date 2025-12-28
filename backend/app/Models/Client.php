@@ -39,4 +39,9 @@ class Client extends Model
     {
         return $this->hasOne(Installation::class);
     }
+
+    public function savTickets()
+    {
+        return $this->hasMany(SavTicket::class);
+    }
 }

@@ -20,6 +20,7 @@ return Application::configure(basePath: dirname(__DIR__))
 
         $middleware->alias([
             'role' => \App\Http\Middleware\RoleMiddleware::class,
+            'portal.compte' => \App\Http\Middleware\EnsurePortalCompte::class,
         ]);
     })
     ->withCommands([

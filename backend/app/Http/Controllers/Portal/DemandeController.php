@@ -32,7 +32,8 @@ class DemandeController extends Controller
 
         Demande::create($data);
 
-        return redirect()->route('portal.home')->with('success', 'Demande envoyée. Vous serez contacté.');
+        $request->session()->put('portal_compte_id', $compte->id);
+
+        return redirect()->route('portal.compte.dashboard')->with('success', 'Votre demande a été enregistrée.');
     }
 }
-

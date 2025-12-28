@@ -1,4 +1,4 @@
-# Cahier de Spécification des Besoins – CuWiP (Customer Wireless Provider)
+﻿# Cahier de Spécification des Besoins – CuWiP (Customer Wireless Provider)
 
 Version: 0.1 (projet initial)
 Source d’entrée: cahier-de-charge.pdf (2 pages) et contexte WISP/FAI indiqué.
@@ -63,7 +63,13 @@ Source d’entrée: cahier-de-charge.pdf (2 pages) et contexte WISP/FAI indiqué
 - F-INS-02: Marquer l’installation « terminée » via un contrôle radio/bouton.
 - F-INS-03: Passage automatique à l’état client `installé` puis `actif` (si validé).
 
-### 5.5 Facturation Mensuelle
+### 5.5 Site surveys et remédiation
+- F-SUR-01: Lors de la clôture d’un site survey, saisir obligatoirement le résultat (`disponible` / `indisponible`) et documenter le motif en cas d’échec (obstacle, puissance, angle, etc.).
+- F-SUR-02: Refléter automatiquement ce résultat dans le statut client (`éligible` si disponible, `non_éligible` sinon) et pouvoir demander un service de suivi/ingénierie.
+- F-SUR-03: Fournir une vue analytique regroupant les surveys par BTS/zone, mettant en évidence les “hotspots” (ex. ≥ 2 surveys indisponibles) pour prioriser les actions correctives.
+- F-SUR-04: Historiser motifs et demandes de suivi pour éviter de répéter des surveys infructueux sur la même zone et faciliter les audits.
+
+### 5.6 Facturation Mensuelle
 - F-FAC-01: Générer automatiquement les factures pour tous les clients `actifs` non exclus.
 - F-FAC-02: Permettre d’exclure un client d’une période (motif + trace).
 - F-FAC-03: Gérer les statuts facture: `générée` → `envoyée` → `payée` → `annulée`.
@@ -71,27 +77,28 @@ Source d’entrée: cahier-de-charge.pdf (2 pages) et contexte WISP/FAI indiqué
 - F-FAC-05: Générer un PDF de facture (logo, infos client, période, montant, conditions).
 - F-FAC-06: Re‑génération manuelle possible en cas de correction (avec versioning).
 
-### 5.6 Paiement (majoritairement cash)
+### 5.7 Paiement (majoritairement cash)
 - F-PAI-01: Enregistrer un paiement (date, montant, mode, référence, note, opérateur).
 - F-PAI-02: Marquer la facture « payée » et le client « à jour » pour la période.
 - F-PAI-03: Historiser tous les paiements et permettre la recherche/export.
 
-### 5.7 Notifications
+### 5.8 Notifications
 - F-NOT-01: À la génération/envoi facture: envoyer WhatsApp ou SMS au client.
 - F-NOT-02: À l’enregistrement paiement: envoyer confirmation.
 - F-NOT-03: Journaliser statut d’envoi (succès/échec) et permettre relance.
 
-### 5.8 Dashboard et Reporting
-- F-DAS-01: Filtres multi‑critères (BTS, ville, statut client, période, partenaire, type).
+### 5.9 Dashboard et Reporting
+- F-DAS-01: Filtres multi-critères (BTS, ville, statut client, période, partenaire, type).
 - F-DAS-02: KPIs: nb clients total/actifs, clients par BTS, factures générées/payées/impayées, taux de paiement, exclusions.
 - F-DAS-03: Exports CSV/PDF selon filtres (droits requis).
+- F-DAS-04: Vue cartographique interactive (fond OpenStreetMap ou équivalent) affichant simultanément les BTS géolocalisées (icône dédiée + compteur clients actifs) et les derniers clients installés (icône distincte), avec zoom/drag, infobulles détaillées et liens vers les fiches concernées; filtres identiques au tableau de bord pour concentrer l'affichage sur un secteur.
 
-### 5.9 Administration
+### 5.10 Administration
 - F-ADM-01: Gestion des utilisateurs, rôles et permissions (RBAC).
 - F-ADM-02: Paramètres facturation (montants, taxes, références), canaux notifications, planning auto.
 - F-ADM-03: Journal d’audit (qui a fait quoi, quand).
 
-### 5.10 Espace Client (Portail)
+### 5.11 Espace Client (Portail)
 - F-PORT-01: Inscription/connexion client. Authentification par OTP (SMS/WhatsApp ou e‑mail); option mot de passe si requis; gestion des sessions et révocation.
 - F-PORT-02: Profil client: nom, téléphone (vérifié), e‑mail (optionnel), adresse; consentements (contact, traitements, notifications).
 - F-PORT-03: Demande d’abonnement: type (domicile/entreprise), adresse + GPS, e‑mail de facturation (entreprise), photos du site, choix d’offre/forfait (si défini), commentaires.
@@ -158,6 +165,12 @@ Clés `*` uniques; relations: `Client`→`Bts`(N:1), `Facture`→`Client`(N:1), 
 - `POST /portal/demandes` (type: abonnement|reabonnement)
 - `GET /portal/demandes` / `GET /portal/demandes/{id}` / `PATCH ...` (annulation, replanification)
 - `GET /portal/factures` / `GET /portal/factures/{id}` (téléchargement PDF)
+
+### 5.12 SAV / Service client
+- F-SAV-01: Creer un ticket SAV lie a un client (type incident/assistance/reclamation), indiquer le canal (telephone, WhatsApp, portail, e-mail), priorite et description obligatoires.
+- F-SAV-02: Assigner le ticket a un agent/technicien, suivre les statuts (`open`, `in_progress`, `pending_client`, `resolved`, `closed`) et consigner les notes/date de resolution.
+- F-SAV-03: Permettre la creation rapide depuis la fiche client (backoffice) ainsi que via le portail client, avec notifications internes pour les priorites hautes.
+- F-SAV-04: Fournir un tableau de bord SAV filtrable (statut, priorite, recherche client) et des KPIs (tickets ouverts, retard, suivi demande), avec historique pour audit.
 
 ## 11. Dashboard & Rapports
 - Tableaux: Clients (filtres), Factures (statuts), BTS (répartition, charge), Paiements (par période, mode), Exclusions.

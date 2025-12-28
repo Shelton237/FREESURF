@@ -10,7 +10,21 @@ class WorkOrder extends Model
     use HasFactory;
 
     protected $fillable = [
-        'type','client_id','bts_id','assigned_to','status','scheduled_at','started_at','completed_at','lat','lng','notes','checklist'
+        'type',
+        'client_id',
+        'bts_id',
+        'assigned_to',
+        'status',
+        'scheduled_at',
+        'started_at',
+        'completed_at',
+        'lat',
+        'lng',
+        'notes',
+        'checklist',
+        'survey_result',
+        'survey_reason',
+        'survey_follow_up',
     ];
 
     protected $casts = [
@@ -20,6 +34,7 @@ class WorkOrder extends Model
         'checklist' => 'array',
         'lat' => 'float',
         'lng' => 'float',
+        'survey_follow_up' => 'boolean',
     ];
 
     public function client(){ return $this->belongsTo(Client::class); }
@@ -28,4 +43,3 @@ class WorkOrder extends Model
     public function events(){ return $this->hasMany(WorkOrderEvent::class); }
     public function attachments(){ return $this->hasMany(WorkOrderAttachment::class); }
 }
-
