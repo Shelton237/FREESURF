@@ -44,4 +44,21 @@ class Client extends Model
     {
         return $this->hasMany(SavTicket::class);
     }
+
+    public function factures()
+    {
+        return $this->hasMany(Facture::class);
+    }
+
+    public function compteLiens()
+    {
+        return $this->hasMany(LienCompteClient::class);
+    }
+
+    public function compteClients()
+    {
+        return $this->belongsToMany(CompteClient::class, 'lien_compte_clients')
+            ->withPivot(['statut', 'verified_at', 'last_confirmed_at'])
+            ->withTimestamps();
+    }
 }

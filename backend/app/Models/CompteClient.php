@@ -17,4 +17,21 @@ class CompteClient extends Model
     {
         return $this->hasMany(Demande::class);
     }
+
+    public function liens()
+    {
+        return $this->hasMany(LienCompteClient::class);
+    }
+
+    public function clients()
+    {
+        return $this->belongsToMany(Client::class, 'lien_compte_clients')
+            ->withPivot(['statut', 'verified_at', 'last_confirmed_at'])
+            ->withTimestamps();
+    }
+
+    public function factures()
+    {
+        return $this->hasMany(Facture::class);
+    }
 }

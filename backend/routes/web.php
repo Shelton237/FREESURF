@@ -75,11 +75,20 @@ Route::prefix('portal')->group(function () {
 
     Route::middleware('portal.compte')->group(function () {
         Route::get('/compte', [\App\Http\Controllers\Portal\CompteController::class, 'dashboard'])->name('portal.compte.dashboard');
+        Route::get('/compte/profil', [\App\Http\Controllers\Portal\CompteController::class, 'showProfile'])->name('portal.compte.profile');
+        Route::post('/compte/profil', [\App\Http\Controllers\Portal\CompteController::class, 'updateProfile']);
+        Route::post('/compte/clients/link', [\App\Http\Controllers\Portal\CompteController::class, 'linkClient'])->name('portal.compte.clients.link');
+        Route::post('/compte/sav', [\App\Http\Controllers\Portal\CompteController::class, 'storeSavTicket'])->name('portal.compte.sav.store');
+        Route::get('/compte/factures', [\App\Http\Controllers\Portal\CompteController::class, 'factures'])->name('portal.compte.factures.index');
+        Route::get('/compte/factures/{facture}', [\App\Http\Controllers\Portal\CompteController::class, 'showFacture'])->name('portal.compte.factures.show');
+        Route::get('/compte/factures/{facture}/download', [\App\Http\Controllers\Portal\CompteController::class, 'downloadFacture'])->name('portal.compte.factures.download');
+        Route::get('/compte/demandes/{demande}', [\App\Http\Controllers\Portal\CompteController::class, 'showDemande'])->name('portal.compte.demandes.show');
+        Route::post('/compte/demandes/{demande}/cancel', [\App\Http\Controllers\Portal\CompteController::class, 'cancelDemande'])->name('portal.compte.demandes.cancel');
     });
 });
 
 // Backoffice (Administration)
-Route::prefix('backoffice')->middleware(['auth', 'verified'])->group(function () {
+Route::prefix('backoffice')->middleware(['auth', 'verified', 'role:backoffice'])->group(function () {
     Route::get('/', \App\Http\Controllers\Backoffice\DashboardController::class)->name('backoffice.dashboard');
     Route::get('/bts', [\App\Http\Controllers\Backoffice\BtsController::class, 'index'])->name('backoffice.bts.index');
     Route::get('/bts/create', [\App\Http\Controllers\Backoffice\BtsController::class, 'create'])->name('backoffice.bts.create');
@@ -113,6 +122,11 @@ Route::prefix('backoffice')->middleware(['auth', 'verified'])->group(function ()
 // Espace technicien
 Route::prefix('tech')->middleware(['auth','verified','role:technicien'])->group(function(){
     Route::get('/', [\App\Http\Controllers\Tech\WorkOrderController::class, 'index'])->name('tech.dashboard');
+    Route::get('/work-orders/create', [\App\Http\Controllers\Tech\WorkOrderController::class, 'create'])->name('tech.work-orders.create');
+    Route::post('/work-orders', [\App\Http\Controllers\Tech\WorkOrderController::class, 'store'])->name('tech.work-orders.store');
+    Route::get('/sav', [\App\Http\Controllers\Tech\SavController::class, 'index'])->name('tech.sav.index');
+    Route::get('/sav/{savTicket}', [\App\Http\Controllers\Tech\SavController::class, 'show'])->name('tech.sav.show');
+    Route::patch('/sav/{savTicket}', [\App\Http\Controllers\Tech\SavController::class, 'update'])->name('tech.sav.update');
     Route::get('/work-orders/{workOrder}', [\App\Http\Controllers\Tech\WorkOrderController::class, 'show'])->name('tech.work-orders.show');
     Route::post('/work-orders/{workOrder}/start', [\App\Http\Controllers\Tech\WorkOrderController::class, 'start'])->name('tech.work-orders.start');
     Route::post('/work-orders/{workOrder}/complete', [\App\Http\Controllers\Tech\WorkOrderController::class, 'complete'])->name('tech.work-orders.complete');

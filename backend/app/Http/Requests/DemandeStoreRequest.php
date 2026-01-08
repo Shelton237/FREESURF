@@ -3,6 +3,7 @@
 namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Validation\Rule;
 
 class DemandeStoreRequest extends FormRequest
 {
@@ -23,6 +24,11 @@ class DemandeStoreRequest extends FormRequest
             'lng' => ['nullable', 'numeric', 'between:-180,180'],
             'commentaire' => ['nullable', 'string'],
             'password' => ['required', 'string', 'min:6', 'confirmed'],
+            'client_code' => [
+                Rule::requiredIf(fn () => $this->input('type') === 'reabonnement'),
+                'string',
+                'exists:clients,code',
+            ],
         ];
     }
 }

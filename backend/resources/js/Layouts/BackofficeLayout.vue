@@ -4,8 +4,9 @@ import { computed } from 'vue'
 
 const page = usePage()
 const url = computed(() => page.url)
+const role = computed(() => page.props.auth?.user?.role)
 
-const navLinks = [
+const baseLinks = [
   { href: '/backoffice', label: 'Dashboard', match: '/backoffice' },
   { href: '/backoffice/bts', label: 'BTS', match: '/backoffice/bts' },
   { href: '/backoffice/clients', label: 'Clients', match: '/backoffice/clients' },
@@ -15,6 +16,14 @@ const navLinks = [
   { href: '/backoffice/sav', label: 'SAV', match: '/backoffice/sav' },
   { href: '/backoffice/admin/users', label: 'Utilisateurs', match: '/backoffice/admin/users' },
 ]
+
+const navLinks = computed(() => {
+  const links = [...baseLinks]
+  if (role.value === 'technicien') {
+    links.push({ href: '/tech', label: 'Espace technicien', match: '/tech' })
+  }
+  return links
+})
 
 const isActive = (match) => url.value.startsWith(match)
 </script>

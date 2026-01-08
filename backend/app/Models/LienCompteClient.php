@@ -5,19 +5,21 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class Demande extends Model
+class LienCompteClient extends Model
 {
     use HasFactory;
 
     protected $fillable = [
-        'compte_client_id', 'client_id', 'type', 'statut', 'nom', 'telephone',
-        'email_facturation', 'adresse', 'lat', 'lng', 'commentaire', 'motif_annulation', 'cancelled_at',
+        'compte_client_id',
+        'client_id',
+        'statut',
+        'verified_at',
+        'last_confirmed_at',
     ];
 
     protected $casts = [
-        'lat' => 'float',
-        'lng' => 'float',
-        'cancelled_at' => 'datetime',
+        'verified_at' => 'datetime',
+        'last_confirmed_at' => 'datetime',
     ];
 
     public function compteClient()
@@ -30,3 +32,4 @@ class Demande extends Model
         return $this->belongsTo(Client::class);
     }
 }
+

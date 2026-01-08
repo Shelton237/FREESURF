@@ -20,6 +20,7 @@ const form = ref({
   type: 'abonnement',
   nom: '',
   telephone: '',
+  client_code: '',
   email_facturation: '',
   adresse: '',
   lat: '',
@@ -29,11 +30,21 @@ const form = ref({
   password_confirmation: '',
 })
 
+const isReabonnement = computed(() => form.value.type === 'reabonnement')
+
 const submitting = ref(false)
 
 const requiredForStep = (step) => {
   if (step === 0) {
-    return form.value.nom.trim() && form.value.telephone.trim() && form.value.password.length >= 6 && form.value.password === form.value.password_confirmation
+    const baseOk =
+      form.value.nom.trim() &&
+      form.value.telephone.trim() &&
+      form.value.password.length >= 6 &&
+      form.value.password === form.value.password_confirmation
+    if (isReabonnement.value && !form.value.client_code.trim()) {
+      return false
+    }
+    return baseOk
   }
   if (step === 1) {
     return form.value.adresse.trim() && form.value.lat && form.value.lng
@@ -77,16 +88,26 @@ const useMyLocation = () => {
   )
 }
 
-const summary = computed(() => [
-  { label: 'Type', value: typeOptions.find((o) => o.value === form.value.type)?.label || form.value.type },
-  { label: 'Nom', value: form.value.nom || '—' },
-  { label: 'Téléphone', value: form.value.telephone || '—' },
-  { label: 'E-mail facturation', value: form.value.email_facturation || '—' },
-  { label: 'Adresse', value: form.value.adresse || '—' },
-  { label: 'Latitude', value: form.value.lat || '—' },
-  { label: 'Longitude', value: form.value.lng || '—' },
-  { label: 'Commentaire', value: form.value.commentaire || '—' },
-])
+const summary = computed(() => {
+  const base = [
+    { label: 'Type', value: typeOptions.find((o) => o.value === form.value.type)?.label || form.value.type },
+    { label: 'Nom', value: form.value.nom || '-' },
+    { label: 'Téléphone', value: form.value.telephone || '-' },
+  ]
+
+  if (isReabonnement.value) {
+    base.push({ label: 'Code client', value: form.value.client_code || '-' })
+  }
+
+  return [
+    ...base,
+    { label: 'E-mail facturation', value: form.value.email_facturation || '-' },
+    { label: 'Adresse', value: form.value.adresse || '-' },
+    { label: 'Latitude', value: form.value.lat || '-' },
+    { label: 'Longitude', value: form.value.lng || '-' },
+    { label: 'Commentaire', value: form.value.commentaire || '-' },
+  ]
+})
 
 const submit = () => {
   showValidation.value = true
@@ -161,6 +182,13 @@ const submit = () => {
               <label class="block">
                 <span class="text-sm text-gray-600">Téléphone *</span>
                 <input v-model="form.telephone" class="w-full border rounded-lg p-3 mt-1" placeholder="Ex: 699 00 00 00" />
+              </label>
+              <div v-if="isReabonnement" class="p-3 rounded-xl bg-rose-50 text-sm text-rose-800">
+                Indiquez le code client reçu lors de l’installation initiale pour accélérer la réactivation.
+              </div>
+              <label v-if="isReabonnement" class="block">
+                <span class="text-sm text-gray-600">Code client *</span>
+                <input v-model="form.client_code" class="w-full border rounded-lg p-3 mt-1" placeholder="Ex: CLI-000123" />
               </label>
               <label class="block">
                 <span class="text-sm text-gray-600">E-mail de facturation (entreprise)</span>
